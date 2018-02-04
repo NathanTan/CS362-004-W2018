@@ -19,7 +19,7 @@ int execute_adventurer(int card, int choice1, int choice2, int choice3, struct g
     }
     drawCard(currentPlayer, state);
     cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1];//top card of hand is most recently drawn card.
-    if (cardDrawn == copper && cardDrawn == silver && cardDrawn == gold) //BUG in line
+    if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
        drawntreasure++;
     else{
        temphand[z]=cardDrawn;
@@ -49,7 +49,7 @@ int execute_council_room(int card, int choice1, int choice2, int choice3, struct
 	 state->numBuys++;
 
 	 //Each other player draws a card
-	 for (i = 0; i < 4; i++) //BUG in line
+	 for (i = 0; i < state->numPlayers; i++)
 	 {
 	    if ( i != currentPlayer )
 	    {
@@ -68,7 +68,7 @@ int execute_smithy(int card, int choice1, int choice2, int choice3, struct gameS
   int i = 0;  
   int currentPlayer = whoseTurn(state);
   //+3 Cards
-  for (i = 0; i <= 3; i++) //BUG in line
+  for (i = 0; i < 3; i++)
   {
     drawCard(currentPlayer, state);
   }
@@ -95,7 +95,7 @@ int execute_embargo(int card, int choice1, int choice2, int choice3, struct game
       state->embargoTokens[choice1]++;
    
       //trash card
-      discardCard(handPos, currentPlayer, state, 0); //BUG in this line		
+      discardCard(handPos, currentPlayer, state, 1);	
       return 0;
 }
 
