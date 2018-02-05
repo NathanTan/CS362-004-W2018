@@ -3,7 +3,14 @@
 #include <math.h>
 #include "dominion.h"
 
-// Testing "Smithy"
+void assertIsTrue(int a, int b)
+{
+    if (a == b)
+        printf("TEST PASSED\n");
+    else
+        printf("TEST FAILED\n");
+    return;
+}
 
 int main()
 {
@@ -11,6 +18,7 @@ int main()
     int precount, postcount;
     int handpos = 0, choice1 = 0, choice2 = 0, choice3 = 0, bonus = 0;
     int seed = 4;
+    int result;
     int numPlayers = 3;
     int testPlayer = 0;
     struct gameState state;
@@ -36,7 +44,7 @@ int main()
     postcount = state.handCount[testPlayer];
     printf("handcount: %d\n", state.handCount[testPlayer]);
 
-    assert(precount + 2 == postcount);
+    assertIsTrue(precount + 2, postcount);
 
     /*----------------------Test 2----------------------*/
 
@@ -53,9 +61,13 @@ int main()
     postcount = state.handCount[testPlayer];
     printf("handcount: %d\n", state.handCount[testPlayer]);
 
-    // assert(precount + 1 == postcount);
+    printf("This test should fail:   ");
+
+    assertIsTrue(precount + 2, postcount);
 
     /*----------------------Test 1----------------------*/
+    endTurn(&state);
+    testPlayer = whoseTurn(&state);
 
     //Smithy is card 13
     //Set the player 1's first card to smithy
@@ -65,11 +77,10 @@ int main()
     printf("handcount: %d\n", state.handCount[testPlayer]);
 
     execute_smithy(card, choice1, choice2, choice3, &state, handpos, &bonus);
-    execute_smithy(card, choice1, choice2, choice3, &state, handpos, &bonus);
     postcount = state.handCount[testPlayer];
     printf("handcount: %d\n", state.handCount[testPlayer]);
 
-    //assert(precount - 2 == postcount);
+    assertIsTrue(precount + 2, postcount);
 
     return 0;
 }
