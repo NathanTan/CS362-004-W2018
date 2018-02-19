@@ -35,7 +35,7 @@ int main()
     int currentPlayer = whoseTurn(&state);
 
     // Lets pump the player's deck full with a random amount of cards.
-    int randd = (rand() + 40 ) % 100; // The deck max is 500
+    int randd = ((rand() + 40 ) % 100) + 40; // The deck max is 500
     printf("Random integer: %d\n", randd);
 
     int deckCount = state.deckCount[currentPlayer];
