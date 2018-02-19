@@ -19,7 +19,7 @@ int main()
     int precount, postcount;
     int handpos = 0, choice1 = 0, choice2 = 0, choice3 = 0, bonus = 0;
     int seed = 4;
-    int card = smithy;
+    int card = adventurer;
     int numPlayers = 3;
     int testPlayer = 0;
     struct gameState state;
@@ -58,5 +58,20 @@ int main()
     printf("pre: %d\npost: %d\n", precount, postcount);
     assertIsTrue(precount + 2, postcount); 
 
-        return 0;
+
+    //Make sure we get full branch coverage
+    endTurn(&state);
+    currentPlayer = whoseTurn(&state);
+    
+    //Emptying the deck will trigger a shuffle of the discard into the new deck.
+    state.deckCount[currentPlayer] = 0;
+    precount = state.handCount[currentPlayer];
+    
+    execute_adventurer(card, choice1, choice2, choice3, &state, handpos, &bonus);
+    postcount = state.handCount[currentPlayer];
+
+    printf("pre: %d\npost: %d\n", precount, postcount);
+    assertIsTrue(precount + 2, postcount); 
+
+    return 0;
 }
