@@ -15,101 +15,48 @@ void assertIsTrue(int a, int b)
 
 int main()
 {
-    char *testFunction = "Smithy";
+    char *testFunction = "Adventurer";
     int precount, postcount;
     int handpos = 0, choice1 = 0, choice2 = 0, choice3 = 0, bonus = 0;
     int seed = 4;
+    int card = smithy;
     int numPlayers = 3;
     int testPlayer = 0;
     struct gameState state;
     int k[10] = {adventurer, embargo, village, minion, mine, cutpurse,
                  sea_hag, tribute, smithy, council_room};
-    int i = 0;
-    srand(4);
+    srand(40);
 
     // initialize a game state
     initializeGame(numPlayers, k, seed, &state);
-
-    printf("----------------Random Testing: %s----------------\n", testFunction);
+    printf("----------------Testing: %s----------------\n", testFunction);
 
     /*----------------------Test 1----------------------*/
-    printf("Player: %d\n", testPlayer);
+    int currentPlayer = whoseTurn(&state);
 
-    int randd = rand() % 50;
-    // Give the player a random amount of cards.
-    for (i = 0; i < randd; i++)
-    {
-        drawCard(testPlayer, state);
+    // Lets pump the player's deck full with a random amount of cards.
+    int randd = (rand() + 40 ) % 100; // The deck max is 500
+    printf("Random integer: %d\n", randd);
+
+    int deckCount = state.deckCount[currentPlayer];
+    int cardsAdded = 0;
+    while (cardsAdded < randd) {
+        deckCount = state.deckCount[currentPlayer];
+        state.deck[currentPlayer][deckCount] = rand() % 26; // Add a random card.
+        state.deckCount[currentPlayer]++;
+        cardsAdded++;
     }
 
-    int hand_count = state.handCount[testPlayer];
-    randd = rand() % hand_count;
-    int number_of_smithys = 0;
+    printf("Deck size: %d\n", deckCount);
 
 
-    // Make a random about of cards in the player's hand smithy.
-    while (handpos < randd) {
-        //Smithy is card 13
-        //Set the player 1's first card to smithy
-        state.hand[testPlayer][handpos] = 13;
-        handpos++;
-        number_of_smithys++;
-    }
+    precount = state.handCount[currentPlayer];
+    execute_adventurer(card, choice1, choice2, choice3, &state, handpos, &bonus);
 
+    postcount = state.handCount[currentPlayer];
 
+    printf("pre: %d\npost: %d\n", precount, postcount);
+    assertIsTrue(precount + 2, postcount); 
 
-    
-
-    int card = 13; // Smithy is 13
-    precount = state.handCount[testPlayer];
-    printf("handcount: %d\n", state.handCount[testPlayer]);
-
-    handpos = 0;
-    // Execute all the smithys!
-    while (handpos < randd) {
-        execute_smithy(card, choice1, choice2, choice3, &state, handpos, &bonus);
-    }
-
-    postcount = state.handCount[testPlayer];
-    printf("handcount: %d\n", state.handCount[testPlayer]);
-
-    assertIsTrue(precount + (2 * number_of_smithys), postcount);
-
-    // /*----------------------Test 2----------------------*/
-
-    // printf("Player: %d\n", testPlayer);
-
-    // //Smithy is card 13
-    // //Set the player 1's first card to smithy
-    // state.hand[testPlayer][handpos] = 13;
-
-    // precount = state.handCount[testPlayer];
-    // printf("handcount: %d\n", state.handCount[testPlayer]);
-
-    // execute_smithy(card, choice1, choice2, choice3, &state, handpos, &bonus);
-    // postcount = state.handCount[testPlayer];
-    // printf("handcount: %d\n", state.handCount[testPlayer]);
-
-    // printf("This test should fail:   ");
-
-    // assertIsTrue(precount + 2, postcount);
-
-    // /*----------------------Test 1----------------------*/
-    // endTurn(&state);
-    // testPlayer = whoseTurn(&state);
-
-    // //Smithy is card 13
-    // //Set the player 1's first card to smithy
-    // state.hand[testPlayer][handpos] = 13;
-
-    // precount = state.handCount[testPlayer];
-    // printf("handcount: %d\n", state.handCount[testPlayer]);
-
-    // execute_smithy(card, choice1, choice2, choice3, &state, handpos, &bonus);
-    // postcount = state.handCount[testPlayer];
-    // printf("handcount: %d\n", state.handCount[testPlayer]);
-
-    // assertIsTrue(precount + 2, postcount);
-
-    return 0;
+        return 0;
 }

@@ -13,103 +13,79 @@ void assertIsTrue(int a, int b)
     return;
 }
 
+/* Draws and plays a random amount of the village card */
 int main()
 {
-    char *testFunction = "Smithy";
-    int precount, postcount;
+    char *testFunction = "Village";
+    int precount, postcount, pre_action_count, post_action_count;
     int handpos = 0, choice1 = 0, choice2 = 0, choice3 = 0, bonus = 0;
     int seed = 4;
+    int result;
     int numPlayers = 3;
     int testPlayer = 0;
+    int deckStartSize = 0;
     struct gameState state;
     int k[10] = {adventurer, embargo, village, minion, mine, cutpurse,
                  sea_hag, tribute, smithy, council_room};
-    int i = 0;
     srand(4);
 
     // initialize a game state
     initializeGame(numPlayers, k, seed, &state);
+    testPlayer = whoseTurn(&state);
 
     printf("----------------Random Testing: %s----------------\n", testFunction);
 
-    /*----------------------Test 1----------------------*/
     printf("Player: %d\n", testPlayer);
 
     int randd = rand() % 50;
-    // Give the player a random amount of cards.
-    for (i = 0; i < randd; i++)
-    {
-        drawCard(testPlayer, state);
-    }
+
+    deckStartSize = state.deckCount[testPlayer];
+    printf("Deck start size: %d\n", state.deckCount[testPlayer]);
 
     int hand_count = state.handCount[testPlayer];
     randd = rand() % hand_count;
-    int number_of_smithys = 0;
+    int number_of_villages = 0;
+    int card = village;
 
 
     // Make a random about of cards in the player's hand smithy.
     while (handpos < randd) {
         //Smithy is card 13
         //Set the player 1's first card to smithy
-        state.hand[testPlayer][handpos] = 13;
+        state.hand[testPlayer][handpos] = card;
         handpos++;
-        number_of_smithys++;
+        number_of_villages++;
     }
 
 
-
-    
-
-    int card = 13; // Smithy is 13
     precount = state.handCount[testPlayer];
     printf("handcount: %d\n", state.handCount[testPlayer]);
 
+    pre_action_count = state.numActions;
+    printf("Num actions: %d\n(Should be 1)\n", pre_action_count);
+
     handpos = 0;
-    // Execute all the smithys!
+    // Execute all the villages!
     while (handpos < randd) {
-        execute_smithy(card, choice1, choice2, choice3, &state, handpos, &bonus);
+        //printf("Executing village!\n");
+        result = cardEffect(card, choice1, choice2, choice3, &state, handpos, &bonus);
+        handpos++;
     }
 
     postcount = state.handCount[testPlayer];
-    printf("handcount: %d\n", state.handCount[testPlayer]);
+    // printf("new handcount: %d\n", postcount);
+    // printf("old handcount: %d\n\n", precount);
 
-    assertIsTrue(precount + (2 * number_of_smithys), postcount);
+    post_action_count = state.numActions;
 
-    // /*----------------------Test 2----------------------*/
+    // printf("new action count: %d\n", post_action_count);
+    // printf("old action count: %d\n\n", pre_action_count);
+    // printf("Hand pos: %d\n", handpos);
 
-    // printf("Player: %d\n", testPlayer);
+    // Hand count shouldn't change from 5.
+    assertIsTrue(precount, postcount);
 
-    // //Smithy is card 13
-    // //Set the player 1's first card to smithy
-    // state.hand[testPlayer][handpos] = 13;
-
-    // precount = state.handCount[testPlayer];
-    // printf("handcount: %d\n", state.handCount[testPlayer]);
-
-    // execute_smithy(card, choice1, choice2, choice3, &state, handpos, &bonus);
-    // postcount = state.handCount[testPlayer];
-    // printf("handcount: %d\n", state.handCount[testPlayer]);
-
-    // printf("This test should fail:   ");
-
-    // assertIsTrue(precount + 2, postcount);
-
-    // /*----------------------Test 1----------------------*/
-    // endTurn(&state);
-    // testPlayer = whoseTurn(&state);
-
-    // //Smithy is card 13
-    // //Set the player 1's first card to smithy
-    // state.hand[testPlayer][handpos] = 13;
-
-    // precount = state.handCount[testPlayer];
-    // printf("handcount: %d\n", state.handCount[testPlayer]);
-
-    // execute_smithy(card, choice1, choice2, choice3, &state, handpos, &bonus);
-    // postcount = state.handCount[testPlayer];
-    // printf("handcount: %d\n", state.handCount[testPlayer]);
-
-    // assertIsTrue(precount + 2, postcount);
-
+    assertIsTrue(pre_action_count, post_action_count + (handpos * 2));
+   
     return 0;
 }
