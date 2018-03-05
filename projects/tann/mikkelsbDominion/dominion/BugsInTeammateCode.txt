@@ -1,0 +1,5 @@
+1) when using Smithy, 4 cards are drawn instead of 3:
+	      for (i = 0; i <= 3; i++)
+
+2) When using Adventurer, the treasure count doesn't include silver, only gold and bronze:
+	    if (*cardDrawn == copper || *cardDrawn == copper || *cardDrawn == gold)
