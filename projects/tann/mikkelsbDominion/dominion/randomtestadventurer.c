@@ -22,9 +22,14 @@ int main()
     int card = adventurer;
     int numPlayers = 3;
     int testPlayer = 0;
+    int drawntreasure = 0;
     struct gameState state;
     int k[10] = {adventurer, embargo, village, minion, mine, cutpurse,
                  sea_hag, tribute, smithy, council_room};
+    int temphand[MAX_HAND];// moved above the if statement
+    int z = 0;// this is the counter for the temp hand
+
+
     srand(40);
 
     // initialize a game state
@@ -51,7 +56,7 @@ int main()
 
 
     precount = state.handCount[currentPlayer];
-    execute_adventurer(card, choice1, choice2, choice3, &state, handpos, &bonus);
+    adventurerCardEffect(&drawntreasure, &state, &currentPlayer, temphand, &z, &card);
 
     postcount = state.handCount[currentPlayer];
 
@@ -67,7 +72,7 @@ int main()
     state.deckCount[currentPlayer] = 0;
     precount = state.handCount[currentPlayer];
     
-    execute_adventurer(card, choice1, choice2, choice3, &state, handpos, &bonus);
+    adventurerCardEffect(&drawntreasure, &state, &currentPlayer, temphand, &z, &card);
     postcount = state.handCount[currentPlayer];
 
     printf("pre: %d\npost: %d\n", precount, postcount);

@@ -62,9 +62,10 @@ int main()
 
     handpos = 0;
     // Execute all the smithys!
-    while (handpos < randd) {
+    //while (handpos < randd) {
+    {
         printf("Executing smithy!\n");
-        execute_smithy(card, choice1, choice2, choice3, &state, handpos, &bonus);
+        smithyCardEffect(&state, &testPlayer, &handpos);
         handpos++;
     }
 
